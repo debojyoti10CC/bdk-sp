@@ -159,7 +159,12 @@ struct RecipientMap {
     address: String,
     /// Number of outputs to create for this recipient. Some vectors (e.g. the K_MAX one) use it to
     /// describe many identical recipients without listing each of them.
-    count: Option<usize>,
+    #[serde(default = "default_recipient_count")]
+    count: usize,
+}
+
+fn default_recipient_count() -> usize {
+    1
 }
 
 /// Deserializes the sending recipients, repeating each one `count` times.
@@ -171,7 +176,7 @@ where
     for recipient in Vec::<RecipientMap>::deserialize(deserializer)? {
         let code =
             SilentPaymentCode::try_from(recipient.address.as_str()).map_err(D::Error::custom)?;
-        recipients.extend(std::iter::repeat_n(code, recipient.count.unwrap_or(1)));
+        recipients.extend(std::iter::repeat_n(code, recipient.count));
     }
     Ok(recipients)
 }
