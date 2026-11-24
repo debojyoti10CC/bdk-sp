@@ -1,7 +1,7 @@
 use crate::serialization::{SendingDataGiven, SendingVinData, JSON_VECTORS};
 use bdk_sp::{
     bitcoin::{secp256k1::SecretKey, ScriptBuf, XOnlyPublicKey},
-    receive::{extract_pubkey, K_MAX},
+    receive::extract_pubkey,
     send::{
         create_silentpayment_partial_secret, create_silentpayment_scriptpubkeys, error::SpSendError,
     },
@@ -187,7 +187,7 @@ fn maximum_per_group_recipient_limit_k_max_is_exceeded() {
     for case in JSON_VECTORS[27].sending.iter() {
         assert!(matches!(
             process_sending_given(&case.given),
-            Err(SpSendError::GroupLimitExceeded(K_MAX))
+            Err(SpSendError::GroupLimitExceeded)
         ));
     }
 }

@@ -90,7 +90,7 @@ pub fn create_silentpayment_scriptpubkeys(
 
         // BIP352: fail if a group (same B_scan) has more than K_MAX recipients
         if k >= K_MAX {
-            return Err(SpSendError::GroupLimitExceeded(K_MAX));
+            return Err(SpSendError::GroupLimitExceeded);
         }
 
         shared_secret_cache.insert(*scan, (k + 1, shared_secret));
@@ -472,10 +472,7 @@ mod tests {
 
             let result = create_silentpayment_scriptpubkeys(partial_secret, &sp_codes);
 
-            assert!(matches!(
-                result,
-                Err(SpSendError::GroupLimitExceeded(K_MAX))
-            ));
+            assert!(matches!(result, Err(SpSendError::GroupLimitExceeded)));
         }
     }
 }

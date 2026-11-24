@@ -22,8 +22,8 @@ pub enum SpSendError {
     MissingDerivations,
     /// There are not enough outputs for the silent payments derived
     MissingOutputs,
-    /// More than the given number of recipients share the same scan key (BIP352 `K_MAX`)
-    GroupLimitExceeded(u32),
+    /// More than [`K_MAX`](crate::receive::K_MAX) recipients share the same scan key (BIP352)
+    GroupLimitExceeded,
 }
 
 impl From<crate::LexMinError> for SpSendError {
@@ -65,7 +65,7 @@ impl std::fmt::Display for SpSendError {
             ),
             Self::MissingDerivations => write!(f, "From PSBT, there are not enough silent payment derivations for all targeted outputs"),
             Self::MissingOutputs => write!(f, "From PSBT, there are not enough outputs for the silent payments derived"),
-            Self::GroupLimitExceeded(k_max) => write!(f, "Silent payment sending error: more than {k_max} recipients share the same scan key"),
+            Self::GroupLimitExceeded => write!(f, "Silent payment sending error: more than {} recipients share the same scan key", crate::receive::K_MAX),
             Self::MissingPrevout => write!(f, "From PSBT, unable to extract prevout script pubkey"),
             Self::MissingPlaceholderScript => write!(f, "From PSBT, missing placeholder script pubkey for associated silent payment recipient."),
         }
